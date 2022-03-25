@@ -1,0 +1,12 @@
+migrations/
+migrations/
+node_modules/
+config/
+dist/
+build/
+dashboard/
+.now
+.nexus
+.vercel
+.env
+prisma/.env
