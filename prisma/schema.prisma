@@ -1,24 +1,82 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native"]
+}
+
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
-}
-
-model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean @default(false)
-  author    User?   @relation(fields: [authorId], references: [id])
-  authorId  Int?
-}
-
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
+  id                 Int        @id @default(autoincrement())
+  email              String     @unique
+  phone              String?    @unique
+  avatar             String?
+  role               Role
+  password           String?
+  name               String?
+  caregiverPatient   User?      @relation("CareGiversToUser", fields: [caregiverPatientId], references: [id])
+  caregiverPatientId Int?
+  contacts           Contact[]
+  Medicine           Medicine[]
+  carGivers          User[]     @relation("CareGiversToUser")
+  relatives          User[]     @relation("RelativesToUser")
+  relativePatient    User?      @relation("RelativesToUser", fields: [relativePatientId], references: [id])
+  relativePatientId  Int?
+
 }
+
+model Contact {
+  id          Int         @id @default(autoincrement())
+  images      String[]
+  type        ContactType
+  name        String?
+  patient     User        @relation(fields: [userId], references: [id])
+  description String?
+  message     String?
+  userId      Int
+}
+
+model Medicine {
+  id          Int        @id @default(autoincrement())
+  Date        DateTime[]
+  name        String?
+  patient     User       @relation(fields: [userId], references: [id])
+  description String?
+
+  userId Int
+}
+
+enum Role {
+
+  PATIENT
+  CARE_GIVER
+  RELATIVE
+}
+
+enum ContactType {
+  FRIEND
+  FAMILY
+  NEIGHBOUR
+}
+
+// events => {
+// Date,
+// name,
+// description,
+// withWho: ['user'],
+// patientId
+// }
+// patientDetails => {
+// patientId,
+// description,
+// carrerjobs: [""],
+// livingAddress
+// }
+// location => {
+// radius,
+// centerPoint
+
+// // if the patient exceeds the shortcut between the centerPoint to distance equal to the radius so send a notification to the careGiver
+// }
