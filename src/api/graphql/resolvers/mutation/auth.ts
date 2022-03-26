@@ -1,3 +1,4 @@
+//@ts-ignore
 import * as bcrypt from 'bcryptjs'
 import hashPassword from '../../../utils/hashPassword'
 import {

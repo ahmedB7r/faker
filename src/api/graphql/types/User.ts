@@ -9,8 +9,8 @@ import {
   objectType,
   stringArg,
 } from 'nexus'
-import hashPassword from '../../utils/hashPassword'
-import * as bcrypt from 'bcryptjs'
+// import hashPassword from '../../utils/hashPassword'
+// import * as bcrypt from 'bcryptjs'
 
 export const User = objectType({
   name: 'User',
