@@ -13,7 +13,7 @@ const { applyMiddleware } = require('graphql-middleware')
 import { execute, subscribe } from 'graphql'
 
 import passport from 'passport'
-import { SubscriptionServer } from 'subscriptions-transport-ws'
+// import { SubscriptionServer } from 'subscriptions-transport-ws'
 import { createServer } from 'http'
 
 const session = require('express-session')
@@ -45,17 +45,17 @@ const apolloServer = async () => {
     schema,
     context: createContext,
     introspection: process.env.NODE_ENV == 'production' ? undefined : true,
-    plugins: [
-      {
-        async serverWillStart() {
-          return {
-            async drainServer() {
-              subscriptionServer.close()
-            },
-          }
-        },
-      },
-    ],
+    // plugins: [
+    //   {
+    //     async serverWillStart() {
+    //       return {
+    //         async drainServer() {
+    //           subscriptionServer.close()
+    //         },
+    //       }
+    //     },
+    //   },
+    // ],
   })
   await apollo.start()
 
@@ -68,24 +68,24 @@ const apolloServer = async () => {
       methods: ['POST'],
     },
   })
-  const subscriptionServer = SubscriptionServer.create(
-    {
-      // This is the `schema` we just created.
-      schema,
-      // These are imported from `graphql`.
-      execute,
-      subscribe,
-      async onConnect(connectionParams: any) {
-        return await createContext({
-          connection: { context: connectionParams },
-        })
-      },
-    },
-    {
-      server: httpServer,
-      path: apollo.graphqlPath,
-    },
-  )
+  //   const subscriptionServer = SubscriptionServer.create(
+  //     {
+  //       // This is the `schema` we just created.
+  //       schema,
+  //       // These are imported from `graphql`.
+  //       execute,
+  //       subscribe,
+  //       async onConnect(connectionParams: any) {
+  //         return await createContext({
+  //           connection: { context: connectionParams },
+  //         })
+  //       },
+  //     },
+  //     {
+  //       server: httpServer,
+  //       path: apollo.graphqlPath,
+  //     },
+  //   )
 
   express.set('port', process.env.PORT || 4000)
 
