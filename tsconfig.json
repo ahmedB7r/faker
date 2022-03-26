@@ -1,9 +1,16 @@
 {
   "compilerOptions": {
-    "sourceMap": true,
-    "outDir": "dist",
+    "moduleResolution": "Node",
+    // "target": "ES2015",
+    "lib": ["esnext"],
+    // "noEmit": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "target": "es2018",
+    "module": "commonjs",
     "strict": true,
-    "lib": ["esnext", "dom"],
-    "esModuleInterop": true
+    "outDir": "build",
+    "rootDir": "./src",
+    "noImplicitAny": false
   }
 }
