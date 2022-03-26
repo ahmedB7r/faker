@@ -10,7 +10,7 @@ import { createContext, prisma } from './utils/createContext'
 import { permissions } from './shield'
 const { applyMiddleware } = require('graphql-middleware')
 
-import { execute, subscribe } from 'graphql'
+// import { execute, subscribe } from 'graphql'
 
 import passport from 'passport'
 // import { SubscriptionServer } from 'subscriptions-transport-ws'
