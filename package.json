@@ -6,10 +6,8 @@
   "version": "1.0.0",
   "license": "MIT",
 
-  "engines": {
-    "node": ">=12.2.0"
-  }
-,
+
+
   "scripts": {
     "build:reflection": "NEXUS_SHOULD_EXIT_AFTER_REFLECTION=true ts-node ./src/api/schema",
     "dev": "env-cmd -f ./config/dev.env ts-node-dev --transpile-only ./src/api/app",
