@@ -30,6 +30,7 @@ model User {
 model Contact {
   id          Int         @id @default(autoincrement())
   images      String[]
+  mainImage   String?
   type        ContactType
   name        String?
   patient     User        @relation(fields: [userId], references: [id])

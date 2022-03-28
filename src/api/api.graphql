@@ -7,30 +7,276 @@ type AuthPayLoad {
   user: User
 }
 
+type Contact {
+  description: String
+  id: Int!
+  images: [String!]!
+  mainImage: String
+  message: String
+  name: String
+  patient: User!
+  type: ContactType!
+}
+
+type ContactConnectionPayLoad {
+  count: Int
+  nodes: [Contact]
+}
+
+input ContactListRelationFilter {
+  every: ContactWhereInput
+  none: ContactWhereInput
+  some: ContactWhereInput
+}
+
+input ContactOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input ContactOrderByWithRelationInput {
+  description: SortOrder
+  id: SortOrder
+  images: SortOrder
+  mainImage: SortOrder
+  message: SortOrder
+  name: SortOrder
+  patient: UserOrderByWithRelationInput
+  type: SortOrder
+  userId: SortOrder
+}
+
+enum ContactType {
+  FAMILY
+  FRIEND
+  NEIGHBOUR
+}
+
+input ContactWhereInput {
+  AND: [ContactWhereInput!]
+  NOT: [ContactWhereInput!]
+  OR: [ContactWhereInput!]
+  description: StringNullableFilter
+  id: IntFilter
+  images: StringNullableListFilter
+  mainImage: StringNullableFilter
+  message: StringNullableFilter
+  name: StringNullableFilter
+  patient: UserWhereInput
+  type: EnumContactTypeFilter
+  userId: IntFilter
+}
+
+input ContactWhereUniqueInput {
+  id: Int
+}
+
 """
 A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
 """
 scalar DateTime
+
+input DateTimeNullableListFilter {
+  equals: [DateTime!]
+  has: DateTime
+  hasEvery: [DateTime!]
+  hasSome: [DateTime!]
+  isEmpty: Boolean
+}
+
+input EnumContactTypeFilter {
+  equals: ContactType
+  in: [ContactType!]
+  not: NestedEnumContactTypeFilter
+  notIn: [ContactType!]
+}
+
+input EnumRoleFilter {
+  equals: Role
+  in: [Role!]
+  not: NestedEnumRoleFilter
+  notIn: [Role!]
+}
+
+input IntFilter {
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: NestedIntFilter
+  notIn: [Int!]
+}
+
+input IntNullableFilter {
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: NestedIntNullableFilter
+  notIn: [Int!]
+}
 
 """
 The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
 scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
+input MedicineListRelationFilter {
+  every: MedicineWhereInput
+  none: MedicineWhereInput
+  some: MedicineWhereInput
+}
+
+input MedicineOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input MedicineWhereInput {
+  AND: [MedicineWhereInput!]
+  Date: DateTimeNullableListFilter
+  NOT: [MedicineWhereInput!]
+  OR: [MedicineWhereInput!]
+  description: StringNullableFilter
+  id: IntFilter
+  name: StringNullableFilter
+  patient: UserWhereInput
+  userId: IntFilter
+}
+
 type Mutation {
+  addContact(description: String, images: [String!]!, mainImage: String, message: String, name: String, type: ContactType!): Contact
+  deleteOneContact(where: ContactWhereUniqueInput!): Contact
   signOut: String
   signin(email: String, password: String!, phone: String): AuthPayLoad
   signup(avatar: String, email: String!, name: String, password: String!, phone: String!, role: Role!): AuthPayLoad
+  updateContact(description: String, id: Int!, images: [String!]!, mainImage: String, message: String, name: String, type: ContactType!): Contact
+}
+
+input NestedEnumContactTypeFilter {
+  equals: ContactType
+  in: [ContactType!]
+  not: NestedEnumContactTypeFilter
+  notIn: [ContactType!]
+}
+
+input NestedEnumRoleFilter {
+  equals: Role
+  in: [Role!]
+  not: NestedEnumRoleFilter
+  notIn: [Role!]
+}
+
+input NestedIntFilter {
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: NestedIntFilter
+  notIn: [Int!]
+}
+
+input NestedIntNullableFilter {
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: NestedIntNullableFilter
+  notIn: [Int!]
+}
+
+input NestedStringFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  not: NestedStringFilter
+  notIn: [String!]
+  startsWith: String
+}
+
+input NestedStringNullableFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  not: NestedStringNullableFilter
+  notIn: [String!]
+  startsWith: String
 }
 
 type Query {
+  contact(where: ContactWhereUniqueInput!): Contact
+  contacts(orderBy: ContactOrderByWithRelationInput, skip: Int, take: Int, where: ContactWhereInput): ContactConnectionPayLoad
   me: User
+}
+
+enum QueryMode {
+  default
+  insensitive
 }
 
 enum Role {
   CARE_GIVER
   PATIENT
   RELATIVE
+}
+
+enum SortOrder {
+  asc
+  desc
+}
+
+input StringFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  mode: QueryMode
+  not: NestedStringFilter
+  notIn: [String!]
+  startsWith: String
+}
+
+input StringNullableFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  mode: QueryMode
+  not: NestedStringNullableFilter
+  notIn: [String!]
+  startsWith: String
+}
+
+input StringNullableListFilter {
+  equals: [String!]
+  has: String
+  hasEvery: [String!]
+  hasSome: [String!]
+  isEmpty: Boolean
 }
 
 type User {
@@ -41,4 +287,53 @@ type User {
   password: String
   phone: String
   role: Role!
+}
+
+input UserListRelationFilter {
+  every: UserWhereInput
+  none: UserWhereInput
+  some: UserWhereInput
+}
+
+input UserOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input UserOrderByWithRelationInput {
+  Medicine: MedicineOrderByRelationAggregateInput
+  avatar: SortOrder
+  carGivers: UserOrderByRelationAggregateInput
+  caregiverPatient: UserOrderByWithRelationInput
+  caregiverPatientId: SortOrder
+  contacts: ContactOrderByRelationAggregateInput
+  email: SortOrder
+  id: SortOrder
+  name: SortOrder
+  password: SortOrder
+  phone: SortOrder
+  relativePatient: UserOrderByWithRelationInput
+  relativePatientId: SortOrder
+  relatives: UserOrderByRelationAggregateInput
+  role: SortOrder
+}
+
+input UserWhereInput {
+  AND: [UserWhereInput!]
+  Medicine: MedicineListRelationFilter
+  NOT: [UserWhereInput!]
+  OR: [UserWhereInput!]
+  avatar: StringNullableFilter
+  carGivers: UserListRelationFilter
+  caregiverPatient: UserWhereInput
+  caregiverPatientId: IntNullableFilter
+  contacts: ContactListRelationFilter
+  email: StringFilter
+  id: IntFilter
+  name: StringNullableFilter
+  password: StringNullableFilter
+  phone: StringNullableFilter
+  relativePatient: UserWhereInput
+  relativePatientId: IntNullableFilter
+  relatives: UserListRelationFilter
+  role: EnumRoleFilter
 }
