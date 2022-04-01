@@ -7,6 +7,7 @@ export type Context = {
   auth: Auth
   user: User
   db: PrismaClient
+  prisma: PrismaClient
   req: Request
   pubsub: PubSub
 }

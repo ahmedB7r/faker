@@ -33,6 +33,7 @@ export const createContext = async ({
       auth,
       user,
       db: prisma,
+      prisma,
       req,
       pubsub,
     }
@@ -48,6 +49,7 @@ export const createContext = async ({
     auth,
     user,
     db: prisma,
+    prisma,
     req,
     pubsub,
   }
