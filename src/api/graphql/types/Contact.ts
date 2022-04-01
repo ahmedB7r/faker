@@ -19,6 +19,7 @@ export const Contact = objectType({
     t.model.description()
     t.model.images()
     t.model.mainImage()
+    t.model.phone()
 
     t.model.message()
     t.model.name()
@@ -49,7 +50,24 @@ export const ConatctQuery = extendType({
       },
       async resolve(source, args, ctx) {
         //@ts-ignore
-        args.where = { AND: [{ userId: ctx.user?.id }, { ...args.where }] }
+        args.where =
+          ctx.user.role == 'PATIENT'
+            ? {
+                AND: [
+                  {
+                    OR: [
+                      { userId: ctx.user?.id },
+                      {
+                        patient: {
+                          caregiverPatientId: { equals: ctx.user.id },
+                        },
+                      },
+                    ],
+                  },
+                  { ...args.where },
+                ],
+              }
+            : { AND: [{ userId: ctx.user?.id }, { ...args.where }] }
         return {
           count: await ctx.db.contact.count({
             //@ts-ignore
@@ -70,6 +88,8 @@ export const Contactmutations = extendType({
       type: 'Contact',
       args: {
         mainImage: stringArg(),
+        phone: stringArg(),
+
         description: stringArg(),
         images: nonNull(list(nonNull(stringArg()))),
         message: stringArg(),
@@ -77,8 +97,16 @@ export const Contactmutations = extendType({
         type: nonNull(arg({ type: 'ContactType' })),
       },
       async resolve(_root, args, ctx) {
-        const { name, mainImage, description, images, message, type, ...rest } =
-          args
+        const {
+          name,
+          mainImage,
+          phone,
+          description,
+          images,
+          message,
+          type,
+          ...rest
+        } = args
 
         const contact = await ctx.db.contact.create({
           data: {
@@ -88,6 +116,7 @@ export const Contactmutations = extendType({
             images,
             message,
             type,
+            phone,
             patient: { connect: { id: ctx.user.id } },
           },
         })
@@ -100,6 +129,8 @@ export const Contactmutations = extendType({
       args: {
         id: nonNull(intArg()),
         mainImage: stringArg(),
+        phone: stringArg(),
+
         description: stringArg(),
         images: nonNull(list(nonNull(stringArg()))),
         message: stringArg(),
@@ -107,7 +138,16 @@ export const Contactmutations = extendType({
         type: nonNull(arg({ type: 'ContactType' })),
       },
       async resolve(_root, args, ctx) {
-        const { name, mainImage, description, images, message, type, id } = args
+        const {
+          name,
+          phone,
+          mainImage,
+          description,
+          images,
+          message,
+          type,
+          id,
+        } = args
 
         const contact = await ctx.db.contact.update({
           where: { id },
@@ -116,6 +156,7 @@ export const Contactmutations = extendType({
             mainImage,
             description,
             images,
+            phone,
             message,
             type,
           },

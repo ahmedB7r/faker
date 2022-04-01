@@ -25,12 +25,25 @@ model User {
   relativePatient    User?      @relation("RelativesToUser", fields: [relativePatientId], references: [id])
   relativePatientId  Int?
 
+  beCarGiverRequests Request[] @relation("UserToBeCareGiver")
+  requests           Request[] @relation("CareGiverReequest")
+}
+
+model Request {
+  id     Int    @id @default(autoincrement())
+  user   User   @relation("UserToBeCareGiver", fields: [userId], references: [id])
+  userId Int
+  status Status @default(PENDING)
+
+  patient   User @relation("CareGiverReequest", fields: [patientId], references: [id])
+  patientId Int
 }
 
 model Contact {
   id          Int         @id @default(autoincrement())
   images      String[]
   mainImage   String?
+  phone       String?
   type        ContactType
   name        String?
   patient     User        @relation(fields: [userId], references: [id])
@@ -60,6 +73,12 @@ enum ContactType {
   FRIEND
   FAMILY
   NEIGHBOUR
+}
+
+enum Status {
+  PENDING
+  ACCEPTED
+  REFUSED
 }
 
 // events => {

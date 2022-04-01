@@ -15,6 +15,7 @@ type Contact {
   message: String
   name: String
   patient: User!
+  phone: String
   type: ContactType!
 }
 
@@ -41,6 +42,7 @@ input ContactOrderByWithRelationInput {
   message: SortOrder
   name: SortOrder
   patient: UserOrderByWithRelationInput
+  phone: SortOrder
   type: SortOrder
   userId: SortOrder
 }
@@ -62,6 +64,7 @@ input ContactWhereInput {
   message: StringNullableFilter
   name: StringNullableFilter
   patient: UserWhereInput
+  phone: StringNullableFilter
   type: EnumContactTypeFilter
   userId: IntFilter
 }
@@ -95,6 +98,13 @@ input EnumRoleFilter {
   in: [Role!]
   not: NestedEnumRoleFilter
   notIn: [Role!]
+}
+
+input EnumStatusFilter {
+  equals: Status
+  in: [Status!]
+  not: NestedEnumStatusFilter
+  notIn: [Status!]
 }
 
 input IntFilter {
@@ -147,12 +157,15 @@ input MedicineWhereInput {
 }
 
 type Mutation {
-  addContact(description: String, images: [String!]!, mainImage: String, message: String, name: String, type: ContactType!): Contact
+  acceptRequest(id: Int!): Request
+  addContact(description: String, images: [String!]!, mainImage: String, message: String, name: String, phone: String, type: ContactType!): Contact
   deleteOneContact(where: ContactWhereUniqueInput!): Contact
+  refuseRequest(id: Int!): Request
+  sendRequestToBeCareGiver(email: String!): Request
   signOut: String
   signin(email: String, password: String!, phone: String): AuthPayLoad
   signup(avatar: String, email: String!, name: String, password: String!, phone: String!, role: Role!): AuthPayLoad
-  updateContact(description: String, id: Int!, images: [String!]!, mainImage: String, message: String, name: String, type: ContactType!): Contact
+  updateContact(description: String, id: Int!, images: [String!]!, mainImage: String, message: String, name: String, phone: String, type: ContactType!): Contact
 }
 
 input NestedEnumContactTypeFilter {
@@ -167,6 +180,13 @@ input NestedEnumRoleFilter {
   in: [Role!]
   not: NestedEnumRoleFilter
   notIn: [Role!]
+}
+
+input NestedEnumStatusFilter {
+  equals: Status
+  in: [Status!]
+  not: NestedEnumStatusFilter
+  notIn: [Status!]
 }
 
 input NestedIntFilter {
@@ -223,11 +243,57 @@ type Query {
   contact(where: ContactWhereUniqueInput!): Contact
   contacts(orderBy: ContactOrderByWithRelationInput, skip: Int, take: Int, where: ContactWhereInput): ContactConnectionPayLoad
   me: User
+  requests(orderBy: RequestOrderByWithRelationInput, skip: Int, take: Int, where: RequestWhereInput): RequestConnectionPayLoad
 }
 
 enum QueryMode {
   default
   insensitive
+}
+
+type Request {
+  id: Int!
+  user: User!
+}
+
+type RequestConnectionPayLoad {
+  count: Int
+  nodes: [Request]
+}
+
+input RequestListRelationFilter {
+  every: RequestWhereInput
+  none: RequestWhereInput
+  some: RequestWhereInput
+}
+
+input RequestOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input RequestOrderByWithRelationInput {
+  id: SortOrder
+  patient: UserOrderByWithRelationInput
+  patientId: SortOrder
+  status: SortOrder
+  user: UserOrderByWithRelationInput
+  userId: SortOrder
+}
+
+input RequestWhereInput {
+  AND: [RequestWhereInput!]
+  NOT: [RequestWhereInput!]
+  OR: [RequestWhereInput!]
+  id: IntFilter
+  patient: UserWhereInput
+  patientId: IntFilter
+  status: EnumStatusFilter
+  user: UserWhereInput
+  userId: IntFilter
+}
+
+input RequestWhereUniqueInput {
+  id: Int
 }
 
 enum Role {
@@ -239,6 +305,12 @@ enum Role {
 enum SortOrder {
   asc
   desc
+}
+
+enum Status {
+  ACCEPTED
+  PENDING
+  REFUSED
 }
 
 input StringFilter {
@@ -302,6 +374,7 @@ input UserOrderByRelationAggregateInput {
 input UserOrderByWithRelationInput {
   Medicine: MedicineOrderByRelationAggregateInput
   avatar: SortOrder
+  beCarGiverRequests: RequestOrderByRelationAggregateInput
   carGivers: UserOrderByRelationAggregateInput
   caregiverPatient: UserOrderByWithRelationInput
   caregiverPatientId: SortOrder
@@ -314,6 +387,7 @@ input UserOrderByWithRelationInput {
   relativePatient: UserOrderByWithRelationInput
   relativePatientId: SortOrder
   relatives: UserOrderByRelationAggregateInput
+  requests: RequestOrderByRelationAggregateInput
   role: SortOrder
 }
 
@@ -323,6 +397,7 @@ input UserWhereInput {
   NOT: [UserWhereInput!]
   OR: [UserWhereInput!]
   avatar: StringNullableFilter
+  beCarGiverRequests: RequestListRelationFilter
   carGivers: UserListRelationFilter
   caregiverPatient: UserWhereInput
   caregiverPatientId: IntNullableFilter
@@ -335,5 +410,6 @@ input UserWhereInput {
   relativePatient: UserWhereInput
   relativePatientId: IntNullableFilter
   relatives: UserListRelationFilter
+  requests: RequestListRelationFilter
   role: EnumRoleFilter
 }
