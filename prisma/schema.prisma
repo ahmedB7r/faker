@@ -9,24 +9,24 @@ datasource db {
 }
 
 model User {
-  id                 Int        @id @default(autoincrement())
-  email              String     @unique
-  phone              String?    @unique
+  id                 Int       @id @default(autoincrement())
+  email              String    @unique
+  phone              String?   @unique
   avatar             String?
   role               Role
   password           String?
   name               String?
-  caregiverPatient   User?      @relation("CareGiversToUser", fields: [caregiverPatientId], references: [id])
+  caregiverPatient   User?     @relation("CareGiversToUser", fields: [caregiverPatientId], references: [id])
   caregiverPatientId Int?
   contacts           Contact[]
-  Medicine           Medicine[]
-  carGivers          User[]     @relation("CareGiversToUser")
-  relatives          User[]     @relation("RelativesToUser")
-  relativePatient    User?      @relation("RelativesToUser", fields: [relativePatientId], references: [id])
+  // Medicine           Medicine[]
+  carGivers          User[]    @relation("CareGiversToUser")
+  relatives          User[]    @relation("RelativesToUser")
+  relativePatient    User?     @relation("RelativesToUser", fields: [relativePatientId], references: [id])
   relativePatientId  Int?
   location           Location?
-  beCarGiverRequests Request[]  @relation("UserToBeCareGiver")
-  requests           Request[]  @relation("CareGiverReequest")
+  beCarGiverRequests Request[] @relation("UserToBeCareGiver")
+  requests           Request[] @relation("CareGiverReequest")
   Event              Event[]
 }
 
@@ -42,18 +42,18 @@ model Location {
 }
 
 model Event {
-  id          Int       @id @default(autoincrement())
-  isDone      Boolean   @default(false)
-  type        EventType @default(UPDATE)
+  id          Int        @id @default(autoincrement())
+  isDone      Boolean    @default(false)
+  type        EventType  @default(UPDATE)
   description String?
   name        String?
-
-  eventDate DateTime?
-  times     DateTime[]
-  days      DAY[]
-  lastFire  DateTime?
-  patient   User       @relation(fields: [patientId], references: [id])
-  patientId Int
+  images      String[]
+  eventDate   DateTime?
+  times       DateTime[]
+  days        DAY[]
+  lastFire    DateTime?
+  patient     User       @relation(fields: [patientId], references: [id])
+  patientId   Int
 }
 
 model Request {
@@ -79,15 +79,15 @@ model Contact {
   userId      Int
 }
 
-model Medicine {
-  id          Int        @id @default(autoincrement())
-  Date        DateTime[]
-  name        String?
-  patient     User       @relation(fields: [userId], references: [id])
-  description String?
+// model Medicine {
+//   id          Int        @id @default(autoincrement())
+//   Date        DateTime[]
+//   name        String?
+//   patient     User       @relation(fields: [userId], references: [id])
+//   description String?
 
-  userId Int
-}
+//   userId Int
+// }
 
 enum Role {
 
