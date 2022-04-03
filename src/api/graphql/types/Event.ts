@@ -24,6 +24,7 @@ export const Event = objectType({
     t.model.eventDate()
     t.model.isDone()
     t.model.times()
+    t.model.images()
   },
 })
 
@@ -90,9 +91,10 @@ export const Eventmutations = extendType({
         description: stringArg(),
         eventDate: arg({ type: 'DateTime' }),
         times: list(nonNull(arg({ type: 'DateTime' }))),
+        images: list(nonNull(stringArg())),
       },
       async resolve(_root, args, ctx) {
-        const { days, type, name, description, eventDate, times } = args
+        const { days, type, name, description, eventDate, times, images } = args
 
         const Event = await ctx.db.event.create({
           data: {
@@ -102,6 +104,7 @@ export const Eventmutations = extendType({
             description,
             isDone: type == 'UPDATE' ? true : false,
             eventDate,
+            images: images || undefined,
             times: times ? { set: times } : undefined,
             patient: { connect: { id: ctx.user.id } },
           },
@@ -120,9 +123,11 @@ export const Eventmutations = extendType({
         description: stringArg(),
         eventDate: arg({ type: 'DateTime' }),
         times: list(nonNull(arg({ type: 'DateTime' }))),
+        images: list(nonNull(stringArg())),
       },
       async resolve(_root, args, ctx) {
-        const { id, days, type, name, description, eventDate, times } = args
+        const { id, days, type, name, description, eventDate, times, images } =
+          args
 
         const Event = await ctx.db.event.update({
           where: { id },
@@ -135,6 +140,7 @@ export const Eventmutations = extendType({
             eventDate,
             times: times ? { set: times } : undefined,
             patient: { connect: { id: ctx.user.id } },
+            images: images || undefined,
           },
         })
 

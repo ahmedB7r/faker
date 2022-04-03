@@ -153,6 +153,7 @@ type Event {
   description: String
   eventDate: DateTime
   id: Int!
+  images: [String!]!
   isDone: Boolean!
   name: String
   patient: User!
@@ -180,6 +181,7 @@ input EventOrderByWithRelationInput {
   description: SortOrder
   eventDate: SortOrder
   id: SortOrder
+  images: SortOrder
   isDone: SortOrder
   lastFire: SortOrder
   name: SortOrder
@@ -203,6 +205,7 @@ input EventWhereInput {
   description: StringNullableFilter
   eventDate: DateTimeNullableFilter
   id: IntFilter
+  images: StringNullableListFilter
   isDone: BoolFilter
   lastFire: DateTimeNullableFilter
   name: StringNullableFilter
@@ -294,32 +297,10 @@ input LocationWhereUniqueInput {
   userId: Int
 }
 
-input MedicineListRelationFilter {
-  every: MedicineWhereInput
-  none: MedicineWhereInput
-  some: MedicineWhereInput
-}
-
-input MedicineOrderByRelationAggregateInput {
-  _count: SortOrder
-}
-
-input MedicineWhereInput {
-  AND: [MedicineWhereInput!]
-  Date: DateTimeNullableListFilter
-  NOT: [MedicineWhereInput!]
-  OR: [MedicineWhereInput!]
-  description: StringNullableFilter
-  id: IntFilter
-  name: StringNullableFilter
-  patient: UserWhereInput
-  userId: IntFilter
-}
-
 type Mutation {
   acceptRequest(id: Int!): Request
   addContact(description: String, images: [String!]!, mainImage: String, message: String, name: String, phone: String, type: ContactType!): Contact
-  addEvent(days: [DAY!], description: String, eventDate: DateTime, name: String, times: [DateTime!], type: EventType!): Event
+  addEvent(days: [DAY!], description: String, eventDate: DateTime, images: [String!], name: String, times: [DateTime!], type: EventType!): Event
   deleteOneContact(where: ContactWhereUniqueInput!): Contact
   deleteOneEvent(where: EventWhereUniqueInput!): Event
   deleteOneLocation(where: LocationWhereUniqueInput!): Location
@@ -329,7 +310,7 @@ type Mutation {
   signin(email: String, password: String!, phone: String): AuthPayLoad
   signup(avatar: String, email: String!, name: String, password: String!, phone: String!, role: Role!): AuthPayLoad
   updateContact(description: String, id: Int!, images: [String!]!, mainImage: String, message: String, name: String, phone: String, type: ContactType!): Contact
-  updateEvent(days: [DAY!], description: String, eventDate: DateTime, id: Int!, name: String, times: [DateTime!], type: EventType!): Event
+  updateEvent(days: [DAY!], description: String, eventDate: DateTime, id: Int!, images: [String!], name: String, times: [DateTime!], type: EventType!): Event
   updateLocation(centerLatitude: String, centerLongitude: String, distance: Float): Location
   updatePatientLocation(latitude: String, longitude: String): Location
 }
@@ -577,7 +558,6 @@ input UserOrderByRelationAggregateInput {
 
 input UserOrderByWithRelationInput {
   Event: EventOrderByRelationAggregateInput
-  Medicine: MedicineOrderByRelationAggregateInput
   avatar: SortOrder
   beCarGiverRequests: RequestOrderByRelationAggregateInput
   carGivers: UserOrderByRelationAggregateInput
@@ -600,7 +580,6 @@ input UserOrderByWithRelationInput {
 input UserWhereInput {
   AND: [UserWhereInput!]
   Event: EventListRelationFilter
-  Medicine: MedicineListRelationFilter
   NOT: [UserWhereInput!]
   OR: [UserWhereInput!]
   avatar: StringNullableFilter
