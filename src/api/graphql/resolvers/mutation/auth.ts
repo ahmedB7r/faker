@@ -71,7 +71,7 @@ export const Mutation = mutationType({
         })
 
         if (isPhoneExist) {
-          throw new Error('sorry but this email are already exist')
+          throw new Error('sorry but this phone are already exist')
         }
         // hash their password
         const hash = await hashPassword(password)
