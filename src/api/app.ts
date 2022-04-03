@@ -15,6 +15,7 @@ const { applyMiddleware } = require('graphql-middleware')
 import passport from 'passport'
 // import { SubscriptionServer } from 'subscriptions-transport-ws'
 import { createServer } from 'http'
+import { startCron } from './utils/cron'
 
 const session = require('express-session')
 
@@ -101,6 +102,7 @@ const apolloServer = async () => {
         'port',
       )}/graphql`,
     )
+    startCron()
   })
   app.setTimeout(25 * 1000) // 10 * 60 seconds * 1000 msecs = 10 minutes
 }

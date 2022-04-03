@@ -1,13 +1,7 @@
-
 {
-
-
   "name": "faker",
   "version": "1.0.0",
   "license": "MIT",
-
-
-
   "scripts": {
     "build:reflection": "NEXUS_SHOULD_EXIT_AFTER_REFLECTION=true ts-node ./src/api/schema",
     "dev": "env-cmd -f ./config/dev.env ts-node-dev --transpile-only ./src/api/app",
@@ -32,15 +26,14 @@
     "semi": false,
     "singleQuote": true,
     "trailingComma": "all"
-
   },
-  
   "dependencies": {
     "@prisma/client": "3.5.0",
     "apollo-server-express": "^3.5.0",
     "axios": "^0.24.0",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
+    "cron-job-manager": "^2.2.1",
     "date-fns": "^2.23.0",
     "express": "^4.17.1",
     "express-session": "^1.17.2",
@@ -52,6 +45,7 @@
     "jsonwebtoken": "^8.5.1",
     "mailgun.js": "^4.1.2",
     "make-promises-safe": "^5.1.0",
+    "moment": "^2.29.1",
     "nexus": "^1.1.0",
     "nexus-plugin-prisma": "^0.35.0",
     "passport": "^0.4.1",
@@ -61,17 +55,16 @@
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^8.5.6",
+    "@types/node": "16.11.26",
     "@types/passport": "^1.0.7",
     "@types/passport-jwt": "^3.0.6",
     "env-cmd": "^10.1.0",
     "faker": "^5.5.3",
     "graphql-request": "^3.6.1",
     "prettier": "2.4.1",
-    "ts-node-dev": "^1.1.1",
     "prisma": "^3.5.0",
     "ts-node": "10.7.0",
-    "typescript": "4.6.2",
-    "@types/node": "16.11.26"
+    "ts-node-dev": "^1.1.1",
+    "typescript": "4.6.2"
   }
 }
-
