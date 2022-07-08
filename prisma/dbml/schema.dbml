@@ -1,0 +1,121 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table User {
+  id Int [pk, increment]
+  email String [unique, not null]
+  phone String [unique]
+  avatar String
+  notificationToken String
+  role Role [not null]
+  password String
+  name String
+  caregiverPatient User
+  caregiverPatientId Int
+  contacts Contact [not null]
+  carGivers User [not null]
+  relatives User [not null]
+  relativePatient User
+  relativePatientId Int
+  location Location
+  beCarGiverRequests Request [not null]
+  requests Request [not null]
+  Event Event [not null]
+}
+
+Table Location {
+  id Int [pk, increment]
+  longitude String
+  latitude String
+  centerLongitude String
+  centerLatitude String
+  distance Float
+  user User [not null]
+  userId Int [unique, not null]
+}
+
+Table Event {
+  id Int [pk, increment]
+  isDone Boolean [not null, default: false]
+  type EventType [not null, default: 'UPDATE']
+  description String
+  name String
+  images String[] [not null]
+  eventDate DateTime
+  times DateTime[] [not null]
+  days DAY[] [not null]
+  lastFire DateTime
+  patient User [not null]
+  patientId Int [not null]
+}
+
+Table Request {
+  id Int [pk, increment]
+  user User [not null]
+  userId Int [not null]
+  status Status [not null, default: 'PENDING']
+  patient User [not null]
+  patientId Int [not null]
+}
+
+Table Contact {
+  id Int [pk, increment]
+  images String[] [not null]
+  mainImage String
+  phone String
+  type ContactType [not null]
+  name String
+  patient User [not null]
+  description String
+  message String
+  userId Int [not null]
+}
+
+Enum Role {
+  PATIENT
+  CARE_GIVER
+  RELATIVE
+}
+
+Enum ContactType {
+  FRIEND
+  FAMILY
+  NEIGHBOUR
+}
+
+Enum Status {
+  PENDING
+  ACCEPTED
+  REFUSED
+}
+
+Enum EventType {
+  EVENT
+  MEDICINE
+  UPDATE
+}
+
+Enum DAY {
+  SAT
+  SUN
+  MON
+  TUE
+  WED
+  THU
+  FRI
+}
+
+Ref: User.caregiverPatientId - User.id
+
+Ref: User.relativePatientId - User.id
+
+Ref: Location.userId - User.id
+
+Ref: Event.patientId > User.id
+
+Ref: Request.userId > User.id
+
+Ref: Request.patientId > User.id
+
+Ref: Contact.userId > User.id

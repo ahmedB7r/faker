@@ -73,7 +73,6 @@ const fireEvents = async () => {
     console.log('🚀 ~ file: cron.ts ~ line 150 ~ updateCurrency ~ error', error)
   }
 }
-fireEvents()
 export const startCron = async () => {
   cronManager.add('fireEvents', '* * * * *', fireEvents, options)
 }

@@ -67,5 +67,26 @@ export const UserQuery = extendType({
 
 export const Usermutations = extendType({
   type: 'Mutation',
-  definition(t) {},
+  definition(t) {
+    t.field('updateMyProfile', {
+      type: 'User',
+      args: {
+        name: stringArg(),
+        email: stringArg(),
+        phone: stringArg(),
+        avatar: stringArg(),
+        notificationToken: stringArg(),
+      },
+      async resolve(source, args, ctx) {
+        if (!ctx?.user?.id) throw new Error('must login first please')
+
+        return await ctx.db.user.update({
+          where: { id: ctx.user.id },
+          data: {
+            ...args,
+          },
+        })
+      },
+    })
+  },
 })
