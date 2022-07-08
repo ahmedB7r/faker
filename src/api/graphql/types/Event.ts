@@ -9,6 +9,7 @@ import {
   objectType,
   stringArg,
 } from 'nexus'
+import { pushNotification } from '../../utils/notifications'
 // import hashPassword from '../../utils/hashPassword'
 // import * as bcrypt from 'bcryptjs'
 
@@ -109,6 +110,19 @@ export const Eventmutations = extendType({
             patient: { connect: { id: ctx.user.id } },
           },
         })
+
+        if (type == 'UPDATE') {
+          const user = await ctx.db.user.findUnique({
+            where: { id: ctx.user.id },
+          })
+          user?.notificationToken &&
+            (await pushNotification({
+              token: user?.notificationToken,
+              message: description,
+              title: name,
+              data: { ...Event, notificationType: 'event' },
+            }))
+        }
 
         return Event
       },

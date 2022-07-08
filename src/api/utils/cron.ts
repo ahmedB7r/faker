@@ -1,6 +1,7 @@
 import { prisma } from './createContext'
 
 import moment from 'moment'
+import { pushNotification } from './notifications'
 
 const days = {
   Saturday: 'SAT',
@@ -23,14 +24,29 @@ const fireEvents = async () => {
   try {
     const events = await prisma.event.findMany({
       where: { isDone: false, eventDate: { lte: moment().toDate() } },
-      select: { id: true },
+      select: {
+        id: true,
+        patient: {
+          select: { notificationToken: true },
+        },
+        description: true,
+        name: true,
+      },
     })
     await Promise.all(
-      events.map(async ({ id }) => {
+      events.map(async (event) => {
         await prisma.event.update({
-          where: { id },
+          where: { id: event.id },
           data: { isDone: true },
         })
+
+        event?.patient?.notificationToken &&
+          (await pushNotification({
+            token: event?.patient?.notificationToken,
+            message: event.description,
+            title: event.name,
+            data: { ...event, notificationType: 'event' },
+          }))
       }),
     )
     var day = moment().format('dddd')
@@ -57,14 +73,24 @@ const fireEvents = async () => {
         })
         times.map((time) => {
           setTimeout(async () => {
-            await prisma.event.create({
+            const event = await prisma.event.create({
               data: {
                 name,
                 description,
                 isDone: true,
                 patient: { connect: { id: patientId } },
               },
+              include: {
+                patient: true,
+              },
             })
+            event?.patient?.notificationToken &&
+              (await pushNotification({
+                token: event?.patient?.notificationToken,
+                message: event.description,
+                title: event.name,
+                data: { ...event, notificationType: 'event' },
+              }))
           }, moment(moment(time).format('HH:mm:ss')).diff(moment(moment().format('HH:mm:ss')), 'milliseconds'))
         })
       }),
