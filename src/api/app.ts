@@ -16,6 +16,7 @@ import passport from 'passport'
 // import { SubscriptionServer } from 'subscriptions-transport-ws'
 import { createServer } from 'http'
 import { startCron } from './utils/cron'
+import { pushNotification } from './utils/notifications'
 
 const session = require('express-session')
 
@@ -103,6 +104,20 @@ const apolloServer = async () => {
       )}/graphql`,
     )
     startCron()
+
+    const users = await prisma.user.findMany()
+    console.log('🚀 ~ file: app.ts ~ line 108 ~ app ~ users', users)
+    Promise.all(
+      users.map(async ({ notificationToken }) => {
+        notificationToken &&
+          (await pushNotification({
+            title: 'test',
+            message: 'new test',
+            token: notificationToken,
+            data: {},
+          }))
+      }),
+    )
   })
   app.setTimeout(25 * 1000) // 10 * 60 seconds * 1000 msecs = 10 minutes
 }

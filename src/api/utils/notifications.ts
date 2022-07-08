@@ -5,7 +5,10 @@ import { Expo } from 'expo-server-sdk'
 let expo = new Expo()
 
 export const pushNotification = async ({ message, token, data, title }) => {
-  await expo.sendPushNotificationsAsync([
+  if (!Expo.isExpoPushToken(token)) {
+    return 'not token'
+  }
+  const notification = await expo.sendPushNotificationsAsync([
     {
       to: token,
       sound: 'default',
@@ -14,4 +17,8 @@ export const pushNotification = async ({ message, token, data, title }) => {
       title,
     },
   ])
+  console.log(
+    '🚀 ~ file: notifications.ts ~ line 18 ~ pushNotification ~ notification',
+    notification,
+  )
 }
