@@ -124,7 +124,7 @@ export const Eventmutations = extendType({
 
         if (type == 'UPDATE') {
           const user = await ctx.db.user.findUnique({
-            where: { id: ctx.user.id },
+            where: { id: patient?.caregiverPatientId || ctx.user.id },
           })
           user?.notificationToken &&
             (await pushNotification({
