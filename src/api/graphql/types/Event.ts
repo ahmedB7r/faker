@@ -101,6 +101,10 @@ export const Eventmutations = extendType({
           where: { id: ctx.user.id },
           select: { caregiverPatientId: true },
         })
+        console.log(
+          '🚀 ~ file: Event.ts ~ line 104 ~ resolve ~ patient',
+          patient,
+        )
 
         const Event = await ctx.db.event.create({
           data: {
