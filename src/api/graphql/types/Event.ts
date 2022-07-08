@@ -97,6 +97,11 @@ export const Eventmutations = extendType({
       async resolve(_root, args, ctx) {
         const { days, type, name, description, eventDate, times, images } = args
 
+        const patient = await ctx.db.user.findUnique({
+          where: { id: ctx.user.id },
+          select: { caregiverPatientId: true },
+        })
+
         const Event = await ctx.db.event.create({
           data: {
             days: days ? { set: days } : undefined,
@@ -107,7 +112,9 @@ export const Eventmutations = extendType({
             eventDate,
             images: images || undefined,
             times: times ? { set: times } : undefined,
-            patient: { connect: { id: ctx.user.id } },
+            patient: {
+              connect: { id: patient?.caregiverPatientId || ctx.user.id },
+            },
           },
         })
 
@@ -153,7 +160,7 @@ export const Eventmutations = extendType({
             description,
             eventDate,
             times: times ? { set: times } : undefined,
-            patient: { connect: { id: ctx.user.id } },
+            // patient: { connect: { id: ctx.user.id } },
             images: images || undefined,
           },
         })
