@@ -82,6 +82,7 @@ export const Usermutations = extendType({
 
         return await ctx.db.user.update({
           where: { id: ctx.user.id },
+          //@ts-ignore
           data: {
             ...args,
           },

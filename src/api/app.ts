@@ -106,4 +106,5 @@ const apolloServer = async () => {
   })
   app.setTimeout(25 * 1000) // 10 * 60 seconds * 1000 msecs = 10 minutes
 }
+
 apolloServer()

@@ -312,6 +312,7 @@ type Mutation {
   updateContact(description: String, id: Int!, images: [String!]!, mainImage: String, message: String, name: String, phone: String, type: ContactType!): Contact
   updateEvent(days: [DAY!], description: String, eventDate: DateTime, id: Int!, images: [String!], name: String, times: [DateTime!], type: EventType!): Event
   updateLocation(centerLatitude: String, centerLongitude: String, distance: Float): Location
+  updateMyProfile(avatar: String, email: String, name: String, notificationToken: String, phone: String): User
   updatePatientLocation(latitude: String, longitude: String): Location
 }
 
@@ -568,6 +569,7 @@ input UserOrderByWithRelationInput {
   id: SortOrder
   location: LocationOrderByWithRelationInput
   name: SortOrder
+  notificationToken: SortOrder
   password: SortOrder
   phone: SortOrder
   relativePatient: UserOrderByWithRelationInput
@@ -592,6 +594,7 @@ input UserWhereInput {
   id: IntFilter
   location: LocationWhereInput
   name: StringNullableFilter
+  notificationToken: StringNullableFilter
   password: StringNullableFilter
   phone: StringNullableFilter
   relativePatient: UserWhereInput
