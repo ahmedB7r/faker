@@ -58,7 +58,7 @@ export const EventQuery = extendType({
                 { patientId: { equals: ctx.user?.id } },
                 {
                   patient: {
-                    caregiverPatientId: { equals: ctx.user.id },
+                    carGivers: { some: { id: { equals: ctx.user.id } } },
                   },
                 },
               ],

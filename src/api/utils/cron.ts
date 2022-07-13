@@ -39,6 +39,10 @@ const fireEvents = async () => {
           where: { id: event.id },
           data: { isDone: true },
         })
+        console.log(
+          '🚀 ~ file: cron.ts ~ line 51 ~ events.map ~ event',
+          event.patient,
+        )
 
         event?.patient?.notificationToken &&
           (await pushNotification({
@@ -72,6 +76,24 @@ const fireEvents = async () => {
           data: { lastFire: moment().startOf('day').toDate() },
         })
         times.map((time) => {
+          console.log(
+            "🚀 ~ file: cron.ts ~ line 77 ~ times.map ~ moment(time).format('HH:mm:ss')",
+            moment(time).format('HH:mm:ss'),
+          )
+          console.log(
+            "🚀 ~ file: cron.ts ~ line 78 ~ times.map ~ moment(moment().add(2, 'hours').format('HH:mm:ss')",
+            moment(moment().add(2, 'hours').format('HH:mm:ss')),
+          )
+
+          const milliseconds = moment(moment(time).format('HH:mm:ss')).diff(
+            moment(moment().add(2, 'hours').format('HH:mm:ss')),
+            'milliseconds',
+          )
+          console.log(
+            '🚀 ~ file: cron.ts ~ line 79 ~ times.map ~ milliseconds',
+            milliseconds,
+          )
+
           setTimeout(async () => {
             const event = await prisma.event.create({
               data: {
@@ -84,6 +106,11 @@ const fireEvents = async () => {
                 patient: true,
               },
             })
+            console.log(
+              '🚀 ~ file: cron.ts ~ line 113 ~ setTimeout ~ event',
+              event.patient,
+            )
+
             event?.patient?.notificationToken &&
               (await pushNotification({
                 token: event?.patient?.notificationToken,
@@ -91,7 +118,7 @@ const fireEvents = async () => {
                 title: event.name,
                 data: { ...event, notificationType: 'event' },
               }))
-          }, moment(moment(time).format('HH:mm:ss')).diff(moment(moment().format('HH:mm:ss')), 'milliseconds'))
+          }, milliseconds)
         })
       }),
     )
